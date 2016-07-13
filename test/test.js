@@ -8,29 +8,29 @@ TEST = function () {
   this.win = window;
   this.doc = document;
 
-  this.mouse = {
+  this.mousePos = {
     x: 0,
     y: 0
   };
 
-  this.keyboard = {
+  this.keyPress = {
     key: null
   };
 
   this.gamepad = {};
 
-  this.mouseEl = this.doc.getElementById('mouse');
+  this.mouseEl = this.doc.getElementById('mousePos');
   this.keyEl = this.doc.getElementById('keyboard');
   this.padEl = this.doc.getElementById('gamepad').getElementsByClassName('axis');
   this.leapEl = this.doc.getElementById('leap').getElementsByClassName('data')[0];
 
   this.onMouseMove = function (event) {
-    scope.mouse.x = event.clientX;
-    scope.mouse.y = event.clientY;
+    scope.mousePos.x = event.clientX;
+    scope.mousePos.y = event.clientY;
   };
 
   this.onKeyDown = function (event) {
-    scope.keyboard.key = event.keyCode;
+    scope.keyPress.key = event.keyCode;
   };
 
   this.leap = Leap.loop({enableGestures:true}, function(frame){
@@ -41,10 +41,10 @@ TEST = function () {
 
   this.render = function () {
     var i;
-    scope.mouseEl.getElementsByClassName('pos-x')[0].innerHTML = scope.mouse.x;
+    scope.mouseEl.getElementsByClassName('pos-x')[0].innerHTML = scope.mousePos.x;
 
-    scope.mouseEl.getElementsByClassName('pos-y')[0].innerHTML = scope.mouse.y;
-    scope.keyEl.getElementsByClassName('key')[0].innerHTML = scope.keyboard.key;
+    scope.mouseEl.getElementsByClassName('pos-y')[0].innerHTML = scope.mousePos.y;
+    scope.keyEl.getElementsByClassName('key')[0].innerHTML = scope.keyPress.key;
 
     scope.gamepad = (typeof navigator.getGamepads === "function" ? navigator.getGamepads() : void 0) ||
       (typeof navigator.webkitGetGamepads === "function" ? navigator.webkitGetGamepads() : void 0) || [];

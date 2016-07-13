@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Interact-io demo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+  <!-- Load libraries -->
+  <script src="js/lib/three.js"></script>
+  <script src="js/lib/leap-0.6.4.js"></script>
+
+  <!-- Load main file -->
+  <script src="js/src/interact-io.js"></script>
+
+  <!-- Load modules for each input -->
+  <script src="js/src/modules/interact-mouse.js"></script>
+  <script src="js/src/modules/interact-keyboard.js"></script>
+  <script src="js/src/modules/interact-gamepad.js"></script>
+  <script src="js/src/modules/interact-leap.js"></script>
+
+  <!-- Load scene module -->
+  <script src="js/src/modules/interact-scene.js"></script>
+
+  <!-- Some CSS styling -->
+  <style>
+    html, body {margin: 0; padding: 0; overflow: hidden}
+  </style>
+
+</head>
+<body>
+
+  <div id="container"></div>
+
+  <script>
+
+    // Create Interact-io instance
+    window.interact = new INTERACT;
+
+    // Init the plugins
+    interact.initMouse();
+    interact.initKeyboard();
+    interact.initGamepad();
+    interact.initLeap();
+
+    // Render visuals (optional plugin)
+    interact.renderScene();
+
+  </script>
+
+</body>
+</html>
