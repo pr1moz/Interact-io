@@ -26,16 +26,15 @@ INTERACT.prototype.initMouse = function () {
       case 0:
         scope.MODE = scope.MODELIST.ROTATE;
         break;
-      case 1:
-        scope.MODE = scope.MODELIST.ZOOM;
-        break;
       case 2:
         scope.MODE = scope.MODELIST.PAN;
         break;
+      default:
+        scope.MODE = scope.MODELIST.NONE;
     }
 
     if (scope.MODE > -1) {
-      // set the starting mouse position of interaction
+      // Set the starting mouse position of interaction
       scope.mousePos.start.copyMouseEv(event);
 
       scope.win.addEventListener('mousemove', onMouseMove, false);
@@ -49,13 +48,21 @@ INTERACT.prototype.initMouse = function () {
     scope.mousePos.curr.copyMouseEv(event);
     scope.mousePos.delta.getDelta(scope.mousePos.curr, scope.mousePos.start);
 
-    if (scope.MODE === scope.MODELIST.ROTATE) {
-      scope.sphericalDelta.rotateLeft(2 * Math.PI * scope.mousePos.delta.x / scope.container.clientWidth * scope.rotateSpeed);
-      scope.sphericalDelta.rotateUp(2 * Math.PI * scope.mousePos.delta.y / scope.container.clientWidth * scope.rotateSpeed);
-    }
+    if (scope.MODE !== scope.MODELIST.NONE) {
+      // Calculate for the right mode
+      switch (scope.MODE) {
+        case scope.MODELIST.ROTATE:
+          rotate();
+          break;
+        case scope.MODELIST.PAN:
+          pan();
+          scope.win.dispatchEvent(scope.events.cameraPan);
+          break;
+      }
 
-    scope.win.dispatchEvent(scope.changeEvent);
-    scope.mousePos.start.copyMouseEv(event);
+      scope.win.dispatchEvent(scope.events.updateView);
+      scope.mousePos.start.copyMouseEv(event);
+    }
   }
 
   function onMouseUp (event) {
@@ -72,7 +79,23 @@ INTERACT.prototype.initMouse = function () {
 
   function onWheel (event) {
     event.preventDefault();
-    //console.log(event.deltaY);
+    scope.zoomDelta = event.wheelDelta || -event.detail;
+
+    if (scope.zoomDelta !== 0) {
+      scope.zoomDelta = scope.zoomDelta > 0 ? 1 : -1;
+      scope.win.dispatchEvent(scope.events.cameraZoom);
+    }
+
+    scope.zoomDelta = 0;
+  }
+
+  function rotate () {
+    scope.sphericalDelta.rotateLeft(2 * Math.PI * scope.mousePos.delta.x / scope.container.clientWidth * scope.rotateSpeed);
+    scope.sphericalDelta.rotateUp(2 * Math.PI * scope.mousePos.delta.y / scope.container.clientWidth * scope.rotateSpeed);
+  }
+
+  function pan () {
+    scope.panDelta.copy(scope.mousePos.delta);
   }
 
 };

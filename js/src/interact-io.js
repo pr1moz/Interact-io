@@ -23,12 +23,21 @@ function INTERACT (cont) {
   this.rotateSpeed = 1.0;
   this.panSpeed = 7.0; // in pixels
 
-  // Interaction event, triggered on any change
-  this.changeEvent = new Event('inputChanged');
+  // Interaction events
+  this.events = {
+    updateView: new Event('updateView'),
+    resetView: new Event('resetView'),
+    cameraPan: new Event('cameraPan'),
+    cameraZoom: new Event('cameraZoom')
+  };
 
-  // Spherical coordinate system delta,
-  // shared between inputs and renderer
+  // Objects shared between inputs and renderer
+  // Spherical coordinate system delta
   this.sphericalDelta = new INTERACT.Spherical;
+  // Panning delta
+  this.panDelta = new INTERACT.Vector3;
+  // Zoom delta
+  this.zoomDelta = 0;
 
 }
 
@@ -89,9 +98,9 @@ INTERACT.Vector3.prototype = {
     return this;
   },
   copy: function (a) {
-    this.x = a.x;
-    this.y = a.y;
-    this.z = a.z;
+    this.x = a.x || 0;
+    this.y = a.y || 0;
+    this.z = a.z || 0;
     return this;
   },
   getDelta: function (a, b) {

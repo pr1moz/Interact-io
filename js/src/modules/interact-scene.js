@@ -13,10 +13,11 @@ INTERACT.prototype.renderScene = function () {
 
   // Location of focus, where the object orbits around
   var target = new THREE.Vector3();
+  var panOffset = new THREE.Vector3();
 
-  // How far you can dolly in and out ( PerspectiveCamera only )
-  var minDistance = 0;
-  var maxDistance = Infinity;
+  // How far you can zoom in and out
+  var minDistance = 10;
+  var maxDistance = 1000;
 
   // How far you can orbit vertically, upper and lower limits.
   // Range is 0 to Math.PI radians.
@@ -28,19 +29,18 @@ INTERACT.prototype.renderScene = function () {
   var minAzimuthAngle = - Infinity; // radians
   var maxAzimuthAngle = Infinity; // radians
 
+  // Use this small number to prevent full 180 / 0 camera angle
+  var EPS = 0.000001;
+
   // Initial state to reset to
   var targetReset = target.clone();
   var positionReset = new THREE.Vector3();
   var zoomReset = 1;
 
-  // Use this small number to prevent full 180 / 0 camera angle
-  var EPS = 0.000001;
-
   // current position in spherical coordinates
   var spherical = new THREE.Spherical();
 
   var scale = 1;
-  var zoomChanged = false;
 
   function initScene () {
     // Init new scene
@@ -92,7 +92,10 @@ INTERACT.prototype.renderScene = function () {
 
     // Add event listeners
     scope.win.addEventListener('resize', onWindowResize, false);
-    scope.win.addEventListener('inputChanged', updateView, false);
+    scope.win.addEventListener('resetView', resetView, false);
+    scope.win.addEventListener('updateView', updateView, false);
+    scope.win.addEventListener('cameraPan', cameraPan, false);
+    scope.win.addEventListener('cameraZoom', cameraZoom, false);
 
     // Start rendering
     render();
@@ -117,6 +120,8 @@ INTERACT.prototype.renderScene = function () {
     var lastQuaternion = new THREE.Quaternion();
 
     var position = scope.camera.position;
+    // Calculate the offset of camera from target
+    // to apply calculations to
     offset.copy(position).sub(target);
 
     // Rotate offset to "y-axis-is-up" space
@@ -141,36 +146,67 @@ INTERACT.prototype.renderScene = function () {
     spherical.radius = Math.max(minDistance, Math.min(maxDistance, spherical.radius));
 
     // Move target to panned location
-    //target.add( panOffset );
+    target.add(panOffset);
 
     offset.setFromSpherical(spherical);
 
     // Rotate offset back to "camera-up-vector-is-up" space
     offset.applyQuaternion(quatInverse);
 
-    // Set camera position
+    // Set camera position to 0 (target)
+    // and apply new calculated offset
     position.copy(target).add(offset);
     scope.camera.lookAt(target);
 
     // Reset sphericalDelta
     scope.sphericalDelta.set(0, 0, 0);
 
-    //panOffset.set( 0, 0, 0 );
+    scale = 1;
+    panOffset.set(0, 0, 0);
 
     // update condition is:
     // min(camera displacement, camera rotation in radians)^2 > EPS
     // using small-angle approximation cos(x/2) = 1 - x^2 / 8
-    if ( zoomChanged ||
-      lastPosition.distanceToSquared(scope.camera.position) > EPS ||
+    if (lastPosition.distanceToSquared(scope.camera.position) > EPS ||
       8 * (1 - lastQuaternion.dot(scope.camera.quaternion)) > EPS) {
-
       lastPosition.copy(scope.camera.position);
       lastQuaternion.copy(scope.camera.quaternion);
-      zoomChanged = false;
-
-      return true;
     }
-    return false;
+  }
+
+  function cameraPan () {
+    var offset = new THREE.Vector3();
+    var temp = new THREE.Vector3();
+
+    // Perspective
+    var position = scope.camera.position;
+    offset.copy(position).sub(target);
+    var targetDistance = offset.length();
+
+    // Calculate target distance of camera
+    targetDistance *= Math.tan((scope.camera.fov / 2) * Math.PI / 180.0);
+
+    // Set the pan on x axis
+    temp.setFromMatrixColumn(scope.camera.matrix, 0); // get X column of objectMatrix
+    temp.multiplyScalar(- (2 * scope.panDelta.x * targetDistance / scope.renderer.domElement.clientHeight));
+    panOffset.add(temp);
+
+    temp = new THREE.Vector3();
+
+    // Set the pan on y axis
+    temp.setFromMatrixColumn(scope.camera.matrix, 1); // get Y column of objectMatrix
+    temp.multiplyScalar(2 * scope.panDelta.y * targetDistance / scope.renderer.domElement.clientHeight);
+    panOffset.add(temp);
+  }
+
+  function cameraZoom () {
+    if (scope.zoomDelta > 0) {
+      scale *= Math.pow(0.95, scope.zoomSpeed);
+    } else {
+      scale /= Math.pow(0.95, scope.zoomSpeed);
+    }
+
+    updateView();
   }
 
   function resetView () {
