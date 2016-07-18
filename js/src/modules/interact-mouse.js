@@ -6,6 +6,8 @@
 INTERACT.prototype.initMouse = function () {
   var scope = this;
 
+  this.INPUTLIST.MOUSE = 0;
+
   // Mouse position object
   this.mousePos = {
     curr: new INTERACT.Vector2(),
@@ -21,6 +23,8 @@ INTERACT.prototype.initMouse = function () {
   // Event functions
   function onMouseDown (event) {
     event.preventDefault();
+
+    scope.INPUT = scope.INPUTLIST.MOUSE;
 
     switch (event.button) {
       case 0:
@@ -56,7 +60,6 @@ INTERACT.prototype.initMouse = function () {
           break;
         case scope.MODELIST.PAN:
           pan();
-          scope.win.dispatchEvent(scope.events.cameraPan);
           break;
       }
 
@@ -70,7 +73,8 @@ INTERACT.prototype.initMouse = function () {
     scope.win.removeEventListener('mousemove', onMouseMove, false);
     scope.win.removeEventListener('mouseup', onMouseUp, false);
     scope.win.removeEventListener('mouseout', onMouseUp, false);
-    scope.MODE = -1;
+    scope.MODE = scope.MODELIST.NONE;
+    scope.INPUT = scope.INPUTLIST.NONE;
   }
 
   function onContextMenu (event) {
@@ -83,10 +87,10 @@ INTERACT.prototype.initMouse = function () {
 
     if (scope.zoomDelta !== 0) {
       scope.zoomDelta = scope.zoomDelta > 0 ? 1 : -1;
-      scope.win.dispatchEvent(scope.events.cameraZoom);
+      scope.zoomChanged = true;
     }
 
-    scope.zoomDelta = 0;
+    scope.win.dispatchEvent(scope.events.updateView);
   }
 
   function rotate () {
@@ -96,6 +100,7 @@ INTERACT.prototype.initMouse = function () {
 
   function pan () {
     scope.panDelta.copy(scope.mousePos.delta);
+    scope.panChanged = true;
   }
 
 };

@@ -94,8 +94,6 @@ INTERACT.prototype.renderScene = function () {
     scope.win.addEventListener('resize', onWindowResize, false);
     scope.win.addEventListener('resetView', resetView, false);
     scope.win.addEventListener('updateView', updateView, false);
-    scope.win.addEventListener('cameraPan', cameraPan, false);
-    scope.win.addEventListener('cameraZoom', cameraZoom, false);
 
     // Start rendering
     render();
@@ -108,6 +106,14 @@ INTERACT.prototype.renderScene = function () {
   }
 
   function updateView () {
+    if (scope.panChanged) {
+      cameraPan();
+    }
+
+    if (scope.zoomChanged) {
+      cameraZoom();
+    }
+
     // Distance between camera and target
     var offset = new THREE.Vector3();
 
@@ -158,8 +164,10 @@ INTERACT.prototype.renderScene = function () {
     position.copy(target).add(offset);
     scope.camera.lookAt(target);
 
-    // Reset sphericalDelta
-    scope.sphericalDelta.set(0, 0, 0);
+    // Reset sphericalDelta if input is mouse
+    if (scope.INPUT === scope.INPUTLIST.MOUSE) {
+      scope.sphericalDelta.set(0, 0, 0);
+    }
 
     scale = 1;
     panOffset.set(0, 0, 0);
@@ -197,16 +205,26 @@ INTERACT.prototype.renderScene = function () {
     temp.setFromMatrixColumn(scope.camera.matrix, 1); // get Y column of objectMatrix
     temp.multiplyScalar(2 * scope.panDelta.y * targetDistance / scope.renderer.domElement.clientHeight);
     panOffset.add(temp);
+
+    if (scope.INPUT !== scope.INPUTLIST.KEYBOARD) {
+      scope.panDelta.set(0,0);
+      scope.panChanged = false;
+    }
   }
 
   function cameraZoom () {
+    if (scope.zoomDelta === 0) return;
+
     if (scope.zoomDelta > 0) {
       scale *= Math.pow(0.95, scope.zoomSpeed);
     } else {
       scale /= Math.pow(0.95, scope.zoomSpeed);
     }
 
-    updateView();
+    if (scope.INPUT !== scope.INPUTLIST.KEYBOARD) {
+      scope.zoomDelta = 0;
+      scope.zoomChanged = false;
+    }
   }
 
   function resetView () {

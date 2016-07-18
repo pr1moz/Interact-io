@@ -18,18 +18,25 @@ function INTERACT (cont) {
   // Possible modes
   this.MODELIST = {NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2};
 
+  // Current input mode
+  this.INPUT = -1;
+  this.INPUTLIST = {NONE: -1};
+
   // Interaction modes modifiers
   this.zoomSpeed = 1.0;
   this.rotateSpeed = 1.0;
+
+  this.keyRotateSpeed = 10.0; // in pixels
   this.panSpeed = 7.0; // in pixels
 
   // Interaction events
   this.events = {
     updateView: new Event('updateView'),
-    resetView: new Event('resetView'),
-    cameraPan: new Event('cameraPan'),
-    cameraZoom: new Event('cameraZoom')
+    resetView: new Event('resetView')
   };
+
+  this.panChanged = false;
+  this.zoomChanged = false;
 
   // Objects shared between inputs and renderer
   // Spherical coordinate system delta
@@ -122,11 +129,19 @@ INTERACT.Spherical.prototype = {
     return this;
   },
   rotateLeft: function (angle) {
-    this.theta -= angle;
+    if (angle) {
+      this.theta -= angle;
+    } else {
+      this.theta = 0;
+    }
     return this;
   },
   rotateUp: function (angle) {
-    this.phi -= angle;
+    if (angle) {
+      this.phi -= angle;
+    } else {
+      this.phi = 0;
+    }
     return this;
   }
 };
