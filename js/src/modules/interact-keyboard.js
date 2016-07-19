@@ -129,7 +129,7 @@ INTERACT.prototype.initKeyboard = function () {
   }
 
   function zoom (direction) {
-    scope.zoomDelta = direction * scope.zoomSpeed;
+    scope.zoomDelta = direction * scope.keyZoomSpeed;
   }
 
   function rotateX (direction) {

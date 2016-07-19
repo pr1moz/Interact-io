@@ -165,7 +165,7 @@ INTERACT.prototype.renderScene = function () {
     scope.camera.lookAt(target);
 
     // Reset sphericalDelta if input is mouse
-    if (scope.INPUT === scope.INPUTLIST.MOUSE) {
+    if (scope.INPUT !== scope.INPUTLIST.KEYBOARD) {
       scope.sphericalDelta.set(0, 0, 0);
     }
 
@@ -216,9 +216,9 @@ INTERACT.prototype.renderScene = function () {
     if (scope.zoomDelta === 0) return;
 
     if (scope.zoomDelta > 0) {
-      scale *= Math.pow(0.95, scope.zoomSpeed);
+      scale *= Math.pow(0.95, scope.zoomDelta);
     } else {
-      scale /= Math.pow(0.95, scope.zoomSpeed);
+      scale /= Math.pow(0.95, -scope.zoomDelta);
     }
 
     if (scope.INPUT !== scope.INPUTLIST.KEYBOARD) {

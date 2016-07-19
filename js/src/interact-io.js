@@ -26,7 +26,8 @@ function INTERACT (cont) {
   this.zoomSpeed = 1.0;
   this.rotateSpeed = 1.0;
 
-  this.keyRotateSpeed = 10.0; // in pixels
+  this.keyRotateSpeed = 5.0; // in pixels
+  this.keyZoomSpeed = 0.3;
   this.panSpeed = 7.0; // in pixels
 
   // Interaction events
