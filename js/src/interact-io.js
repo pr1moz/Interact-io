@@ -30,6 +30,10 @@ function INTERACT (cont) {
   this.keyZoomSpeed = 0.3;
   this.panSpeed = 7.0; // in pixels
 
+  // SpaceNavigator
+  this.gamepadThreshold = 0.01; // lower tracking threshold
+  this.gamepadSensitivity = 1.2; // higher sensitivity threshold
+
   // Interaction events
   this.events = {
     updateView: new Event('updateView'),
