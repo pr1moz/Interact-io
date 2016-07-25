@@ -14,6 +14,9 @@ INTERACT.prototype.initKeyboard = function () {
   var pressed = {};
   var updating = false;
 
+  // Use timer to update view
+  var timer;
+
   // Binding event listeners
   scope.win.addEventListener('keydown', onKeyDown, false);
   scope.win.addEventListener('keyup', onKeyUp, false);
@@ -115,7 +118,7 @@ INTERACT.prototype.initKeyboard = function () {
     }
 
     if (!updating) {
-      update();
+      timer = setInterval(update, scope.timerInterval);
       updating = true;
     }
 
@@ -151,11 +154,14 @@ INTERACT.prototype.initKeyboard = function () {
   function update () {
     if (!Object.keys(pressed).length) {
       updating = false;
+      clearInterval(timer);
       return;
     }
 
-    requestAnimationFrame(update);
-    scope.win.dispatchEvent(scope.events.updateView);
+    requestAnimationFrame(function () {
+      var source = 'aaa';
+      scope.win.dispatchEvent(scope.events.updateView(scope.INPUTLIST.KEYBOARD));
+    });
   }
 
 };

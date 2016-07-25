@@ -9,13 +9,15 @@ INTERACT.prototype.initGamepad = function () {
   this.INPUTLIST.GAMEPAD = 2;
 
   var gamepad = {};
+  var connected = false;
   var checkTimer;
+  var timer;
 
   // Check every second if gamepad is connected
   checkTimer = setInterval(function () {
-    if (navigator.getGamepads()[0] !== undefined) {
-      update();
-      clearInterval(checkTimer);
+    if (navigator.getGamepads()[0] !== undefined && !connected) {
+      timer = setInterval(update, scope.timerInterval);
+      connected = true;
       scope.INPUT = scope.INPUTLIST.GAMEPAD;
     }
   }, 1000);
@@ -24,9 +26,16 @@ INTERACT.prototype.initGamepad = function () {
   var update = function () {
     gamepad = navigator.getGamepads()[0];
 
+    // Quit if the gamepad is disconnected
+    if (gamepad === undefined) {
+      clearInterval(timer);
+      connected = false;
+      return
+    }
+
     // Zooming
     if (Math.abs(gamepad.axes[5]) > scope.gamepadThreshold) {
-      scope.zoomDelta = gamepad.axes[5] * scope.gamepadSensitivity;
+      scope.zoomDelta = gamepad.axes[5] * scope.gamepadZoomSensitivity;
       scope.zoomChanged = true;
     }
 
@@ -57,8 +66,9 @@ INTERACT.prototype.initGamepad = function () {
       scope.win.dispatchEvent(scope.events.resetView);
     }
 
-    scope.win.dispatchEvent(scope.events.updateView);
-    requestAnimationFrame(update);
+    requestAnimationFrame(function () {
+      scope.win.dispatchEvent(scope.events.updateView(scope.INPUTLIST.GAMEPAD));
+    });
   };
 
   function rotateX (delta) {

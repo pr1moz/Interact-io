@@ -63,7 +63,7 @@ INTERACT.prototype.initMouse = function () {
           break;
       }
 
-      scope.win.dispatchEvent(scope.events.updateView);
+      scope.win.dispatchEvent(scope.events.updateView(scope.INPUTLIST.MOUSE));
       scope.mousePos.start.copyMouseEv(event);
     }
   }
@@ -90,7 +90,7 @@ INTERACT.prototype.initMouse = function () {
       scope.zoomChanged = true;
     }
 
-    scope.win.dispatchEvent(scope.events.updateView);
+    scope.win.dispatchEvent(scope.events.updateView(scope.INPUTLIST.MOUSE));
   }
 
   function rotate () {

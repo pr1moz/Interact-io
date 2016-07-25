@@ -6,7 +6,7 @@
 INTERACT.prototype.initLeap = function () {
   var scope = this;
 
-  var leap = Leap.loop({enableGestures:true}, function(frame){
+  this.leap = Leap.loop({enableGestures:true}, function(frame){
     leap.currentFrame = frame;
     leap.previousFrame = scope.leap.frame(1);
     leap.tenFramesBack = scope.leap.frame(10);

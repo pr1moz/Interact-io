@@ -13,6 +13,9 @@ function INTERACT (cont) {
   this.doc = document;
   this.container = cont;
 
+  // Use this timer interval when an input updates periodically
+  this.timerInterval = 30;
+
   // Current mode of interaction
   this.MODE = -1;
   // Possible modes
@@ -26,17 +29,20 @@ function INTERACT (cont) {
   this.zoomSpeed = 1.0;
   this.rotateSpeed = 1.0;
 
-  this.keyRotateSpeed = 5.0; // in pixels
+  this.keyRotateSpeed = 7.0; // in pixels
   this.keyZoomSpeed = 0.3;
   this.panSpeed = 7.0; // in pixels
 
   // SpaceNavigator
   this.gamepadThreshold = 0.01; // lower tracking threshold
-  this.gamepadSensitivity = 1.2; // higher sensitivity threshold
+  this.gamepadSensitivity = 1.2; // set rotate/pan gamepad sensitivity
+  this.gamepadZoomSensitivity = 1.0; // set zoom gamepad sensitivity
 
   // Interaction events
   this.events = {
-    updateView: new Event('updateView'),
+    updateView: function (source) {
+      return new CustomEvent('updateView', { detail: source })
+    },
     resetView: new Event('resetView')
   };
 
