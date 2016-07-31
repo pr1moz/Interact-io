@@ -19,7 +19,7 @@ TEST = function () {
 
   this.gamepad = {};
 
-  this.mouseEl = this.doc.getElementById('mousePos');
+  this.mouseEl = this.doc.getElementById('mouse');
   this.keyEl = this.doc.getElementById('keyboard');
   this.padEl = this.doc.getElementById('gamepad').getElementsByClassName('axis');
   this.leapEl = this.doc.getElementById('leap').getElementsByClassName('data')[0];
@@ -36,11 +36,12 @@ TEST = function () {
   this.leap = Leap.loop({enableGestures:true}, function(frame){
     scope.leap.currentFrame = frame;
     scope.leap.previousFrame = scope.leap.frame(1);
-    scope.leap.tenFramesBack = scope.leap.frame(10);
   });
 
   this.render = function () {
     var i;
+    var values;
+
     scope.mouseEl.getElementsByClassName('pos-x')[0].innerHTML = scope.mousePos.x;
 
     scope.mouseEl.getElementsByClassName('pos-y')[0].innerHTML = scope.mousePos.y;
@@ -55,7 +56,20 @@ TEST = function () {
       }
     }
 
-    scope.leapEl.innerHTML = scope.leap.lastFrame.dump();
+    // scope.leapEl.innerHTML = scope.leap.lastFrame.dump();
+
+    if (scope.leap.currentFrame && scope.leap.currentFrame.hands.length > 0) {
+      values = '<p>Hand: ' + scope.leap.currentFrame.hands[0].type + '</p>' +
+          '<p>Is tracking (index finger extended): ' + scope.leap.currentFrame.hands[0].pointables[1].extended + '</p>';
+
+      if (scope.leap.currentFrame.hands[0].pointables[1].extended) {
+        values += '<p>X:' + (scope.leap.previousFrame.hands[0].palmPosition[0] - scope.leap.currentFrame.hands[0].palmPosition[0]) + '</p>' +
+                  '<p>Y:' + (scope.leap.previousFrame.hands[0].palmPosition[1] - scope.leap.currentFrame.hands[0].palmPosition[1]) + '</p>' +
+                  '<p>Z:' + (scope.leap.previousFrame.hands[0].palmPosition[2] - scope.leap.currentFrame.hands[0].palmPosition[2]) + '</p>';
+      }
+
+      scope.leapEl.innerHTML = values;
+    }
 
     scope.win.requestAnimationFrame(scope.render);
   };
