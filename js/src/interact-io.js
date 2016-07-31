@@ -35,7 +35,7 @@ function INTERACT (cont) {
 
   // SpaceNavigator
   this.gamepadThreshold = 0.01; // lower tracking threshold
-  this.gamepadSensitivity = 1.2; // set rotate/pan gamepad sensitivity
+  this.gamepadSensitivity = 2.0; // set rotate/pan gamepad sensitivity
   this.gamepadZoomSensitivity = 1.0; // set zoom gamepad sensitivity
 
   // Interaction events
