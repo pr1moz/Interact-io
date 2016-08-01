@@ -136,11 +136,11 @@ INTERACT.prototype.initKeyboard = function () {
   }
 
   function rotateX (direction) {
-    scope.sphericalDelta.rotateLeft(2 * Math.PI * (direction * scope.keyRotateSpeed) / scope.container.clientWidth * scope.rotateSpeed);
+    scope.sphericalDelta.rotateLeft(2 * Math.PI * (direction * scope.keyRotateSpeed) / scope.container.clientWidth * scope.keyRotateSpeed);
   }
 
   function rotateY (direction) {
-    scope.sphericalDelta.rotateUp(2 * Math.PI * (direction * scope.keyRotateSpeed) / scope.container.clientWidth * scope.rotateSpeed);
+    scope.sphericalDelta.rotateUp(2 * Math.PI * (direction * scope.keyRotateSpeed) / scope.container.clientWidth * scope.keyRotateSpeed);
   }
 
   function panX (direction) {

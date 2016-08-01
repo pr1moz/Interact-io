@@ -68,6 +68,10 @@ TEST = function () {
                   '<p>Z:' + (scope.leap.previousFrame.hands[0].palmPosition[2] - scope.leap.currentFrame.hands[0].palmPosition[2]) + '</p>';
       }
 
+      if (scope.leap.currentFrame.hands.length === 2) {
+        values += '<p>Scale:' + scope.leap.currentFrame._scaleFactor + '</p>';
+      }
+
       scope.leapEl.innerHTML = values;
     }
 

@@ -8,7 +8,7 @@ function INTERACT (cont) {
   // Set scope instead of binding this
   var scope = this;
 
-  // browser window elements
+  // Browser window elements
   this.win = window;
   this.doc = document;
   this.container = cont;
@@ -29,19 +29,26 @@ function INTERACT (cont) {
   this.zoomSpeed = 1.0;
   this.rotateSpeed = 1.0;
 
-  this.keyRotateSpeed = 7.0; // in pixels
+  this.keyRotateSpeed = 7.0; // In pixels
   this.keyZoomSpeed = 0.3;
-  this.panSpeed = 7.0; // in pixels
+  this.panSpeed = 7.0; // In pixels
 
   // SpaceNavigator
-  this.gamepadThreshold = 0.01; // lower tracking threshold
-  this.gamepadSensitivity = 2.0; // set rotate/pan gamepad sensitivity
-  this.gamepadZoomSensitivity = 1.0; // set zoom gamepad sensitivity
+  this.gamepadThreshold = 0.01; // Lower tracking threshold
+  this.gamepadSensitivity = 2.0; // Set rotate/pan gamepad sensitivity
+  this.gamepadZoomSensitivity = 1.0; // Set zoom gamepad sensitivity
+
+  // Leap Motion
+  this.leapTriggerFinger = 0; // Set which finger has to be closed to start tracking (index, thumb -> pinky)
+  this.leapThreshold = 0.5; // Using leap confidence API, [0..1]
+  this.leapSensitivity = 2.0;
+  this.leapZoomSpeed = 10.0;
 
   // Interaction events
   this.events = {
     updateView: function (source) {
-      return new CustomEvent('updateView', { detail: source })
+      // This returns the device that triggered the event in the detail attribute
+      return new CustomEvent('updateView', { detail: source });
     },
     resetView: new Event('resetView')
   };

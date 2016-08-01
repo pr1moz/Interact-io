@@ -82,11 +82,11 @@ INTERACT.prototype.initGamepad = function () {
   };
 
   function rotateX (delta) {
-    scope.sphericalDelta.rotateLeft(2 * Math.PI * (delta * scope.keyRotateSpeed) / scope.container.clientWidth * scope.rotateSpeed);
+    scope.sphericalDelta.rotateLeft(2 * Math.PI * (delta * scope.keyRotateSpeed) / scope.container.clientWidth * scope.keyRotateSpeed);
   }
 
   function rotateY (delta) {
-    scope.sphericalDelta.rotateUp(2 * Math.PI * (delta * scope.keyRotateSpeed) / scope.container.clientWidth * scope.rotateSpeed);
+    scope.sphericalDelta.rotateUp(2 * Math.PI * (delta * scope.keyRotateSpeed) / scope.container.clientWidth * scope.keyRotateSpeed);
   }
 
   function panX (delta) {
