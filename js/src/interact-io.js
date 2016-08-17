@@ -10,19 +10,37 @@ function INTERACT (cont) {
 
   // Browser window elements
   this.win = window;
-  this.doc = document;
+  this.body = document.body;
   this.container = cont;
 
   // Use this timer interval when an input updates periodically
   this.timerInterval = 30;
 
   // Current mode of interaction
-  this.MODE = -1;
+  this.MODE = {
+    _value: -1,
+    set: function (mode) {
+      this._value = mode;
+      scope.win.dispatchEvent(scope.events.modeChange(this._value));
+    },
+    get: function () {
+      return this._value;
+    }
+  };
   // Possible modes
   this.MODELIST = {NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2};
 
   // Current input mode
-  this.INPUT = -1;
+  this.INPUT = {
+    _value: -1,
+    set: function (mode) {
+      this._value = mode;
+      scope.win.dispatchEvent(scope.events.inputChange(this._value));
+    },
+    get: function () {
+      return this._value;
+    }
+  };
   this.INPUTLIST = {NONE: -1};
 
   // Interaction modes modifiers
@@ -50,7 +68,27 @@ function INTERACT (cont) {
       // This returns the device that triggered the event in the detail attribute
       return new CustomEvent('updateView', { detail: source });
     },
-    resetView: new Event('resetView')
+    resetView: new Event('resetView'),
+    modeChange: function (mode) {
+      // This event is triggered when view mode is changed
+      var currMode = null;
+      for (m in scope.MODELIST) {
+        if (scope.MODELIST[m] === mode) {
+          currMode = m;
+        }
+      }
+      return new CustomEvent('modeChange', { detail: currMode });
+    },
+    inputChange: function (mode) {
+      // This event is triggered when input mode is changed
+      var currInput = null;
+      for (i in scope.INPUTLIST) {
+        if (scope.INPUTLIST[i] === mode) {
+          currInput = i;
+        }
+      }
+      return new CustomEvent('inputChange', { detail: currInput });
+    }
   };
 
   this.panChanged = false;
@@ -162,4 +200,19 @@ INTERACT.Spherical.prototype = {
     }
     return this;
   }
+};
+
+INTERACT.debounce = function (func, wait, immediate) {
+  var timeout;
+  return function() {
+    var context = this, args = arguments;
+    var later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
 };

@@ -237,7 +237,7 @@ INTERACT.prototype.renderScene = function () {
     scope.camera.updateProjectionMatrix();
     updateView();
 
-    scope.MODE = scope.MODELIST.NONE;
+    scope.MODE.set(scope.MODELIST.NONE);
   }
 
   function onWindowResize () {

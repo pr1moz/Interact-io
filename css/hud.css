@@ -1,0 +1,30 @@
+#hud {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2;
+  padding: 0 20px;
+}
+
+#hud .block {
+  display: inline-block;
+  height: 50px;
+  width: 50px;
+  margin: 0 10px;
+  background: #000;
+}
+
+#hud .block.active {
+  background: #FFF;
+}
+
+#hud .inputs {
+  float: left;
+}
+
+#hud .mode {
+  float: right;
+}

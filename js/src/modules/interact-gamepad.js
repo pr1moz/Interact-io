@@ -19,7 +19,7 @@ INTERACT.prototype.initGamepad = function () {
     if (navigator.getGamepads()[0] !== undefined && !connected) {
       timer = setInterval(update, scope.timerInterval);
       connected = true;
-      scope.INPUT = scope.INPUTLIST.GAMEPAD;
+      scope.INPUT.set(scope.INPUTLIST.GAMEPAD);
     }
   }, 1000);
 
@@ -75,7 +75,7 @@ INTERACT.prototype.initGamepad = function () {
 
     if (hasChanged) {
       requestAnimationFrame(function () {
-        scope.win.dispatchEvent(scope.events.updateView(scope.INPUTLIST.GAMEPAD));
+        scope.win.dispatchEvent(scope.events.updateView(scope.INPUT.get()));
       });
       hasChanged = false;
     }

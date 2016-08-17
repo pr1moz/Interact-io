@@ -50,7 +50,7 @@ INTERACT.prototype.initLeap = function () {
     last = scope.leap.frame(10);
 
     if (curr.hands.length && prev.hands.length) {
-      scope.INPUT = scope.INPUTLIST.LEAP;
+      scope.INPUT.set(scope.INPUTLIST.LEAP);
 
       // Check and store hands
       for (i = 0, len = curr.hands.length; i < len; i++) {
@@ -69,14 +69,14 @@ INTERACT.prototype.initLeap = function () {
       if (left.tracking && right.tracking) {
 
         // Zoom with both hands
-        scope.MODE = scope.MODELIST.ZOOM;
+        scope.MODE.set(scope.MODELIST.ZOOM);
         zoom(curr, prev);
         scope.zoomChanged = true;
 
       } else if (left.tracking) {
 
         // Rotate with left hand
-        scope.MODE = scope.MODELIST.ROTATE;
+        scope.MODE.set(scope.MODELIST.ROTATE);
         if (prev.hands[left.id]) {
           rotate(getDelta(curr.hands[left.id].palmPosition, prev.hands[left.id].palmPosition));
         }
@@ -84,23 +84,21 @@ INTERACT.prototype.initLeap = function () {
       } else if (right.tracking) {
 
         // Pan with right hand
-        scope.MODE = scope.MODELIST.PAN;
+        scope.MODE.set(scope.MODELIST.PAN);
         if (prev.hands[right.id]) {
           pan(getDelta(curr.hands[right.id].palmPosition, prev.hands[right.id].palmPosition));
           scope.panChanged = true;
         }
 
       } else {
-        scope.MODE = scope.MODELIST.NONE;
+        scope.MODE.set(scope.MODELIST.NONE);
         prevZoom = curr.scaleFactor(prev);
       }
 
-      console.log(scope.MODE);
-
-      scope.win.dispatchEvent(scope.events.updateView(scope.INPUTLIST.LEAP));
+      scope.win.dispatchEvent(scope.events.updateView(scope.INPUT.get()));
 
     } else {
-      scope.MODE = scope.MODELIST.NONE;
+      scope.MODE.set(scope.MODELIST.NONE);
     }
 
     left.tracking = right.tracking = false;

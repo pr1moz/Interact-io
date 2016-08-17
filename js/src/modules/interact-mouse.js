@@ -24,20 +24,20 @@ INTERACT.prototype.initMouse = function () {
   function onMouseDown (event) {
     event.preventDefault();
 
-    scope.INPUT = scope.INPUTLIST.MOUSE;
+    scope.INPUT.set(scope.INPUTLIST.MOUSE);
 
     switch (event.button) {
       case 0:
-        scope.MODE = scope.MODELIST.ROTATE;
+        scope.MODE.set(scope.MODELIST.ROTATE);
         break;
       case 2:
-        scope.MODE = scope.MODELIST.PAN;
+        scope.MODE.set(scope.MODELIST.PAN);
         break;
       default:
-        scope.MODE = scope.MODELIST.NONE;
+        scope.MODE.set(scope.MODELIST.NONE);
     }
 
-    if (scope.MODE > -1) {
+    if (scope.MODE.get() > -1) {
       // Set the starting mouse position of interaction
       scope.mousePos.start.copyMouseEv(event);
 
@@ -52,9 +52,9 @@ INTERACT.prototype.initMouse = function () {
     scope.mousePos.curr.copyMouseEv(event);
     scope.mousePos.delta.getDelta(scope.mousePos.curr, scope.mousePos.start);
 
-    if (scope.MODE !== scope.MODELIST.NONE) {
+    if (scope.MODE.get() !== scope.MODELIST.NONE) {
       // Calculate for the right mode
-      switch (scope.MODE) {
+      switch (scope.MODE.get()) {
         case scope.MODELIST.ROTATE:
           rotate();
           break;
@@ -63,7 +63,7 @@ INTERACT.prototype.initMouse = function () {
           break;
       }
 
-      scope.win.dispatchEvent(scope.events.updateView(scope.INPUTLIST.MOUSE));
+      scope.win.dispatchEvent(scope.events.updateView(scope.INPUT.get()));
       scope.mousePos.start.copyMouseEv(event);
     }
   }
@@ -73,8 +73,8 @@ INTERACT.prototype.initMouse = function () {
     scope.win.removeEventListener('mousemove', onMouseMove, false);
     scope.win.removeEventListener('mouseup', onMouseUp, false);
     scope.win.removeEventListener('mouseout', onMouseUp, false);
-    scope.MODE = scope.MODELIST.NONE;
-    scope.INPUT = scope.INPUTLIST.NONE;
+    scope.MODE.set(scope.MODELIST.NONE);
+    scope.INPUT.set(scope.INPUTLIST.NONE);
   }
 
   function onContextMenu (event) {
@@ -83,6 +83,9 @@ INTERACT.prototype.initMouse = function () {
 
   function onWheel (event) {
     event.preventDefault();
+    scope.MODE.set(scope.MODELIST.ZOOM);
+    scope.INPUT.set(scope.INPUTLIST.MOUSE);
+
     scope.zoomDelta = event.wheelDelta || -event.detail;
 
     if (scope.zoomDelta !== 0) {
@@ -90,7 +93,7 @@ INTERACT.prototype.initMouse = function () {
       scope.zoomChanged = true;
     }
 
-    scope.win.dispatchEvent(scope.events.updateView(scope.INPUTLIST.MOUSE));
+    scope.win.dispatchEvent(scope.events.updateView(scope.INPUT.get()));
   }
 
   function rotate () {

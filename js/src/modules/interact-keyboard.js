@@ -40,16 +40,16 @@ INTERACT.prototype.initKeyboard = function () {
     }
 
     // Set input type
-    scope.INPUT = scope.INPUTLIST.KEYBOARD;
+    scope.INPUT.set(scope.INPUTLIST.KEYBOARD);
 
     // Set current interaction mode
     if (arrowKeys.indexOf(event.keyCode) > -1) {
-      scope.MODE = scope.MODELIST.ROTATE;
+      scope.MODE.set(scope.MODELIST.ROTATE);
       if (event.shiftKey) {
-        scope.MODE = scope.MODELIST.PAN;
+        scope.MODE.set(scope.MODELIST.PAN);
       }
     } else if (zoomKeys.indexOf(event.keyCode) > -1) {
-      scope.MODE = scope.MODELIST.ZOOM;
+      scope.MODE.set(scope.MODELIST.ZOOM);
     } else {
       // No need to continue if not one of the designated keys
       return;
@@ -58,7 +58,7 @@ INTERACT.prototype.initKeyboard = function () {
     // Add to the list of currently pressed keys
     pressed[event.keyCode] = true;
 
-    switch (scope.MODE) {
+    switch (scope.MODE.get()) {
       case scope.MODELIST.ROTATE:
         switch (event.keyCode) {
           case keys.LEFT:
@@ -159,8 +159,7 @@ INTERACT.prototype.initKeyboard = function () {
     }
 
     requestAnimationFrame(function () {
-      var source = 'aaa';
-      scope.win.dispatchEvent(scope.events.updateView(scope.INPUTLIST.KEYBOARD));
+      scope.win.dispatchEvent(scope.events.updateView(scope.INPUT.get()));
     });
   }
 
