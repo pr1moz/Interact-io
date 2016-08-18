@@ -79,16 +79,18 @@ INTERACT.prototype.initMouse = function () {
 
   function onContextMenu (event) {
     event.preventDefault();
+    return false;
   }
 
   function onWheel (event) {
     event.preventDefault();
-    scope.MODE.set(scope.MODELIST.ZOOM);
-    scope.INPUT.set(scope.INPUTLIST.MOUSE);
 
     scope.zoomDelta = event.wheelDelta || -event.detail;
 
     if (scope.zoomDelta !== 0) {
+      scope.MODE.set(scope.MODELIST.ZOOM);
+      scope.INPUT.set(scope.INPUTLIST.MOUSE);
+
       scope.zoomDelta = scope.zoomDelta > 0 ? 1 : -1;
       scope.zoomChanged = true;
     }

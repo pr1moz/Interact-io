@@ -14,11 +14,15 @@
   height: 50px;
   width: 50px;
   margin: 0 10px;
-  background: #000;
+  opacity: 0.3;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: auto 35px;
 }
 
 #hud .block.active {
-  background: #FFF;
+  opacity: 1;
 }
 
 #hud .inputs {
@@ -28,3 +32,12 @@
 #hud .mode {
   float: right;
 }
+
+#hud .mouse {background-image: url(mouse.svg)}
+#hud .keyboard {background-image: url(keyboard.svg)}
+#hud .gamepad {background-image: url(gamepad.svg)}
+#hud .leap {background-image: url(leap.svg)}
+#hud .pan {background-image: url(pan.svg)}
+#hud .rotate {background-image: url(rotate.svg)}
+#hud .zoom {background-image: url(zoom.svg)}
+#hud .none {display: none}

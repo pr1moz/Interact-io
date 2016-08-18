@@ -44,9 +44,10 @@ INTERACT.prototype.initKeyboard = function () {
 
     // Set current interaction mode
     if (arrowKeys.indexOf(event.keyCode) > -1) {
-      scope.MODE.set(scope.MODELIST.ROTATE);
       if (event.shiftKey) {
         scope.MODE.set(scope.MODELIST.PAN);
+      } else {
+        scope.MODE.set(scope.MODELIST.ROTATE);
       }
     } else if (zoomKeys.indexOf(event.keyCode) > -1) {
       scope.MODE.set(scope.MODELIST.ZOOM);

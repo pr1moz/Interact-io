@@ -28,7 +28,7 @@ function INTERACT (cont) {
     }
   };
   // Possible modes
-  this.MODELIST = {NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2};
+  this.MODELIST = {NONE: -1, ROTATE: 0, PAN: 2, ZOOM: 1};
 
   // Current input mode
   this.INPUT = {
@@ -47,7 +47,7 @@ function INTERACT (cont) {
   this.zoomSpeed = 1.0;
   this.rotateSpeed = 1.0;
 
-  this.keyRotateSpeed = 7.0; // In pixels
+  this.keyRotateSpeed = 5.0; // In pixels
   this.keyZoomSpeed = 0.3;
   this.panSpeed = 7.0; // In pixels
 
